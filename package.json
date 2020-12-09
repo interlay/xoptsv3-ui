@@ -6,7 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "npx eslint ./src/**/*.ts ./src/**/*.tsx"
+        "lint": "npx eslint ./src/**/*.tsx"
     },
     "dependencies": {
         "next": "10.0.3",
