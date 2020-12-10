@@ -28,5 +28,8 @@
         "hooks": {
             "pre-commit": "npm run lint"
         }
+    },
+    "prettier": {
+        "printWidth": 120
     }
 }
