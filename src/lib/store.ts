@@ -2,11 +2,14 @@ import { applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createLogger } from "redux-logger";
 import { rootReducer } from "./reducers";
-import { AppState, StoreState } from "./types";
+import { AppState, StoreState, StoreType } from "./types";
+import { createDefault as createDefaultUser } from "../lib/entities/user";
 
-function loadState(): AppState {
+function loadState(): StoreType {
     // TODO: implement
-    return {};
+    return {
+        user: createDefaultUser(),
+    };
 }
 
 function saveState(state: AppState) {
@@ -15,7 +18,8 @@ function saveState(state: AppState) {
 
 export const configureStore = (): StoreState => {
     const storeLogger = createLogger();
-    const store = createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(storeLogger)));
+    const enhancer = composeWithDevTools(applyMiddleware(storeLogger));
+    const store = createStore(rootReducer, loadState(), enhancer);
     store.subscribe(() => {
         saveState(store.getState());
     });

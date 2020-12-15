@@ -1,15 +1,8 @@
 import { UserActions, UPDATE_USER_NETWORK, UPDATE_USER_DATA } from "../types";
-import { User } from "../types";
+import { User, createDefault } from "../entities/user";
 import { UPDATE_IS_USER_CONNECTED } from "../types";
 
-const initialState: User = {
-    isConnected: false,
-    account: undefined,
-    network: "",
-    btcAddress: "",
-    email: "",
-    notifications: { hour: false, day: false, threedays: false, confirmed: false },
-};
+export const initialState: User = createDefault();
 
 const userReducer = (state: User = initialState, action: UserActions): User => {
     switch (action.type) {
