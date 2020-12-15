@@ -1,0 +1,7 @@
+{
+    "size": "Size",
+    "strike": "Strike Price",
+    "type": "Type",
+    "type-american": "American",
+    "type-european": "European"
+}
