@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import Link from "next/link";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { useEthers } from "../../lib/hooks";
 
 function AccountDropdown(): ReactElement {
     return (
@@ -35,6 +36,8 @@ export default function TopNavigation(): ReactElement {
     const account = false;
     const hasMetaMask = true;
 
+    const provider = useEthers();
+
     return (
         <Navbar bg="light">
             <Navbar.Brand href="#home">
@@ -64,7 +67,7 @@ export default function TopNavigation(): ReactElement {
                     <Nav.Link>Developers</Nav.Link>
                 </Link>
             </Nav>
-            {account ? <AccountDropdown /> : hasMetaMask ? <LoginButton /> : <GetMetamask />}
+            {account ? <AccountDropdown /> : provider ? <LoginButton /> : <GetMetamask />}
         </Navbar>
     );
 }

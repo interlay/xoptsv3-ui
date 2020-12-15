@@ -9,6 +9,8 @@
         "lint": "npx eslint ./src/**/*.tsx"
     },
     "dependencies": {
+        "@metamask/detect-provider": "^1.2.0",
+        "ethers": "^5.0.24",
         "next": "10.0.3",
         "react": "^17.0.1",
         "react-dom": "17.0.1"
