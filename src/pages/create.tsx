@@ -11,10 +11,6 @@ import { launchPriceUpdater } from "../common/utils";
 
 const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
     const isConnected = useSelector((state: AppState) => state.user.isConnected);
-    const dispatch = useDispatch();
-    dispatch(updateBTCSpotPriceAction(10530));
-
-    launchPriceUpdater(dispatch);
 
     return (
         <Card className="mt-5">
@@ -67,7 +63,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             <Form.Check inline label={t("create:type-european")} type={"radio"} />
                         </Col>
                     </Form.Group>
-                    {isConnected ? <Button>Placeholder!</Button> : <ConnectButton />}
+                    <Form.Group>{isConnected ? <Button>Placeholder!</Button> : <ConnectButton />}</Form.Group>
                 </Form>
             </Card.Body>
         </Card>
