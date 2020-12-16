@@ -25,7 +25,7 @@
           "createClass": "createReactClass", // Regex for Component Factory to use,
                                              // default to "createReactClass"
           "pragma": "React",  // Pragma to use, default to "React"
-          "version": "detect" 
+          "version": "detect"
         }
     },
     "rules": {
@@ -48,7 +48,7 @@
           "max-len": [
             "error",
             {
-              "code": 120
+              "code": 100
             }
           ],
           "no-eval": "error"

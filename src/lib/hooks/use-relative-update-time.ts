@@ -10,7 +10,5 @@ export function useRelativeUpdateTime(fromTime: number, frequency: number): numb
         return () => clearInterval(interval);
     }, [fromTime]);
 
-    console.log(relTime);
-
     return relTime;
 }

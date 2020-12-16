@@ -7,5 +7,6 @@
     "missing-metamask": "Please install metamask!",
     "BTC": "BTC",
     "USDT": "USDT",
-    "DAI": "DAI"
+    "DAI": "DAI",
+    "connect-wallet": "Connect wallet"
 }

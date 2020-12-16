@@ -1,22 +1,13 @@
-import Big from "big.js";
-
-export enum OptionType {
-    European,
-    American,
-}
+export type OptionType = "European" | "American";
 
 export type Option = {
-    size: {
-        amount: Big;
-        currency: string;
-    };
-    strike: {
-        strikePrice: Big;
-        currency: string;
-    };
+    size: string;
+    underlying: string;
+    strikePrice: string;
+    collateral: string;
     optionType: OptionType;
     expiry: number;
-    premium: Big;
+    premium: string;
     sellerBTCAddress: string;
     validityWindow: number;
     recipientWhitelist: string;
