@@ -76,7 +76,12 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             <Form.Label>{t("create:size")}</Form.Label>
                         </Col>
                         <Col>
-                            <Form.Control type="number" name="size" value={state.size} onChange={handleChange} />
+                            <Form.Control
+                                type="number"
+                                name="size"
+                                value={state.size}
+                                onChange={handleChange}
+                            />
                         </Col>
                         <Col>
                             <Form.Control
