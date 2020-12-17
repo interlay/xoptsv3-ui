@@ -11,7 +11,7 @@ function App({ Component, pageProps }: AppProps): ReactElement {
     return (
         <Provider store={store}>
             <TopNavigation />
-            <Container>
+            <Container className="mt-3">
                 <Component {...pageProps} />
             </Container>
         </Provider>

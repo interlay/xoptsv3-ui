@@ -1,9 +1,61 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
+import { Table } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Position } from "../../xopts-lib";
+import { fetchPositions } from "../lib/actions/position.action";
+import { useXOpts } from "../lib/hooks/use-xopts";
+import { AppState } from "../lib/types";
 
-export default function Create(): ReactElement {
+type PositionRowProps = {
+    key: number;
+    position: Position;
+};
+
+function PositionRow(props: PositionRowProps): ReactElement {
+    const { position } = props;
+    const { option } = position;
     return (
-        <div>
-            <p>Temporary Positions page here</p>
-        </div>
+        <tr key={props.key}>
+            <td>{new Date(option.expiry).toLocaleDateString()}</td>
+            <td>{option.strikePrice.toLocaleString()}</td>
+            <td>{position.writtenAmount.toLocaleString()}</td>
+            <td>{position.boughtAmount.toLocaleString()}</td>
+            <td>{(position.writtenAmount - position.boughtAmount).toLocaleString()}</td>
+        </tr>
+    );
+}
+
+export default function Positions(): ReactElement {
+    const xopts = useXOpts();
+    const dispatch = useDispatch();
+    const positions = useSelector((state: AppState) => state.positions);
+    const userAddress = useSelector((state: AppState) => state.user.account);
+
+    useEffect(() => {
+        if (xopts && userAddress) dispatch(fetchPositions(xopts, userAddress));
+    }, [xopts, userAddress]);
+
+    return (
+        <>
+            <h1>Current Positions</h1>
+            <Table striped bordered hover>
+                <thead>
+                    <tr>
+                        <th>Expiry date</th>
+                        <th>Strike price</th>
+                        <th>Written amount</th>
+                        <th>Bought amount</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {positions &&
+                        positions.map((position, key) => {
+                            return PositionRow({ position, key });
+                        })}
+                </tbody>
+            </Table>
+        </>
     );
 }
