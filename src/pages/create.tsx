@@ -1,6 +1,7 @@
 import React, { FormEvent, ReactElement, useState } from "react";
 import { Card, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import DatePicker from "react-datepicker";
 import { AppState, FormControlElement, SubmitStates } from "../lib/types";
 import { TFunction } from "next-i18next";
 import ConnectButton from "../components/connect-button/connect-button";
@@ -9,6 +10,8 @@ import CreateOptionBtn from "../components/create-option-btn/create-option-btn";
 import { withTranslation } from "../common/i18n";
 import { encodeOptionData, hoursToMs, daysToMs, getOptionLink } from "../common/utils";
 import { createDefault } from "../lib/entities/option";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 const VALIDITY_OPTIONS = {
     hours: [6, 12],
@@ -30,6 +33,17 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
             ...state,
             [e.target.name]: e.target.value,
         });
+
+    const handleChangeDate = (date: Date) => {
+        date.setUTCHours(12);
+        date.setUTCMinutes(0);
+        date.setUTCSeconds(0);
+        date.setUTCMilliseconds(0);
+        setState({
+            ...state,
+            expiry: date.getTime(),
+        });
+    };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -139,7 +153,11 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             <Form.Label>{t("create:expiry")}</Form.Label>
                         </Col>
                         <Col>
-                            <Form.Control value="Placeholder for date"></Form.Control>
+                            <DatePicker
+                                name="expiry"
+                                selected={new Date(state.expiry)}
+                                onChange={handleChangeDate}
+                            />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}>

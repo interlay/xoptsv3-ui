@@ -20,7 +20,7 @@ export function createDefault(): Option {
         strikePrice: "",
         collateral: "USDT",
         optionType: "American",
-        expiry: 0,
+        expiry: Date.now(),
         premium: "",
         sellerBTCAddress: "",
         validityWindow: 0,

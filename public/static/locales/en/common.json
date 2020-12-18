@@ -10,5 +10,6 @@
     "DAI": "DAI",
     "connect-wallet": "Connect wallet",
     "copy": "Copy",
-    "copy-success": "Copied!"
+    "copy-success": "Copied!",
+    "copy-failure": "Copy failed"
 }
