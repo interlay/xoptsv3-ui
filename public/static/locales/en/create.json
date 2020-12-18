@@ -14,5 +14,7 @@
     "validity-hours_plural": "{{count}} hours",
     "profitable-until": "Profitable until:",
     "profitable-cutoff": "{{cutoff}} {{underlying}}/{{collateral}}",
-    "create-option": "Create option"
+    "create-option": "Create option",
+    "processing-creation": "Processing...",
+    "created-success": "Option created! Share:"
 }

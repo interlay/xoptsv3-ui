@@ -12,3 +12,18 @@ export type Option = {
     validityWindow: number;
     recipientWhitelist: string;
 };
+
+export function createDefault(): Option {
+    return {
+        size: "",
+        underlying: "BTC",
+        strikePrice: "",
+        collateral: "USDT",
+        optionType: "American",
+        expiry: 0,
+        premium: "",
+        sellerBTCAddress: "",
+        validityWindow: 0,
+        recipientWhitelist: "",
+    };
+}

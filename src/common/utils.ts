@@ -1,7 +1,7 @@
 import { Dispatch } from "react";
 import { updateBTCSpotPriceAction } from "../lib/actions";
 import { PriceActions } from "../lib/types/index";
-import { Option } from "../lib/types/option";
+import { Option } from "../lib/entities/option";
 
 export const updateBTCSpotPrice = async (dispatch: Dispatch<PriceActions>): Promise<void> => {
     const mockRandom = Math.random() * 100 - 50;
@@ -20,6 +20,10 @@ export const encodeOptionData = (optionData: Option): string => {
     console.log("Serialised option: ", serialised);
     console.log("base64 option: ", btoa(serialised));
     return serialised;
+};
+
+export const getOptionLink = (serialisedOption: string): string => {
+    return `https://www.xclaim.io/claim/${serialisedOption}`;
 };
 
 export const hoursToMs = (hours: number): number => hours * 3600 * 1000;

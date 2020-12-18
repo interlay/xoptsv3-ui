@@ -1,44 +1,29 @@
 import React, { FormEvent, ReactElement, useState } from "react";
-import { Button, Card, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
+import { Card, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { AppState, FormControlElement } from "../lib/types";
+import { AppState, FormControlElement, SubmitStates } from "../lib/types";
 import { TFunction } from "next-i18next";
 import ConnectButton from "../components/connect-button/connect-button";
 import SpotPrice from "../components/spot-price/spot-price";
+import CreateOptionBtn from "../components/create-option-btn/create-option-btn";
 import { withTranslation } from "../common/i18n";
-import { encodeOptionData, hoursToMs, daysToMs } from "../common/utils";
-import { Option } from "../lib/types/option";
+import { encodeOptionData, hoursToMs, daysToMs, getOptionLink } from "../common/utils";
+import { createDefault } from "../lib/entities/option";
 
 const VALIDITY_OPTIONS = {
     hours: [6, 12],
     days: [1, 2],
 };
 
-enum SubmitStates {
-    None,
-    Processing,
-    Success,
-    Failure,
-}
-
 const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
     const isConnected = useSelector((state: AppState) => state.user.isConnected);
 
-    const defaultState: Option = {
-        size: "",
-        underlying: "BTC",
-        strikePrice: "",
-        collateral: "USDT",
-        optionType: "American",
-        expiry: 0,
-        premium: "",
-        sellerBTCAddress: "",
-        validityWindow: hoursToMs(VALIDITY_OPTIONS.hours[0]),
-        recipientWhitelist: "",
-    };
+    const defaultState = createDefault();
+    defaultState.validityWindow = hoursToMs(VALIDITY_OPTIONS.hours[0]);
     const [state, setState] = useState(defaultState);
 
     const [submitState, setSubmitState] = useState(SubmitStates.None);
+    const [serialisedOpt, setSerialisedOpt] = useState("");
 
     const handleChange = (e: React.ChangeEvent<FormControlElement>) =>
         setState({
@@ -50,8 +35,13 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
         e.preventDefault();
         setSubmitState(SubmitStates.Processing);
         console.log(state);
-        const serialised = encodeOptionData(state);
-        console.log(serialised);
+
+        //mock create option
+        await new Promise<void>((resolve) => setTimeout(() => resolve(), 4000));
+
+        setSerialisedOpt(encodeOptionData(state));
+        console.log(serialisedOpt);
+        setSubmitState(SubmitStates.Success);
     };
 
     const profitableUntil = () => Number(state.strikePrice) - Number(state.premium);
@@ -223,7 +213,14 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             />
                         </Col>
                     </Form.Group>
-                    {isConnected ? <Button type="submit">Placeholder!</Button> : <ConnectButton />}
+                    {isConnected ? (
+                        <CreateOptionBtn
+                            submitState={submitState}
+                            linkString={getOptionLink(serialisedOpt)}
+                        />
+                    ) : (
+                        <ConnectButton />
+                    )}
                 </Form>
             </Card.Body>
         </Card>

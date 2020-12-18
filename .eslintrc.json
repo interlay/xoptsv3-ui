@@ -44,7 +44,9 @@
             }
           ],
           "react/no-unescaped-entities": 0,
-          "indent": "error",
+          "indent": ["error", 4, {
+              "SwitchCase": 1
+          }],
           "max-len": [
             "error",
             {
