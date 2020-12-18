@@ -2,7 +2,7 @@
     "new-option": "New Option",
     "new-option-subtext": "Create a custom option contract",
     "spot": "Spot",
-    "spot-price": "{{price}} USDT/BTC",
+    "spot-price": "{{price}} {{collateral}}/{{underlying}}",
     "spot-updated": "Updated {{time}}s ago",
     "missing-metamask": "Please install metamask!",
     "BTC": "BTC",

@@ -10,7 +10,11 @@ const ConnectButton = ({ t }: { readonly t: TFunction }): ReactElement => {
     const provider = useEthers();
 
     if (provider === null) {
-        return <Button disabled>{t("missing-metamask")}</Button>;
+        return (
+            <Button block disabled>
+                {t("missing-metamask")}
+            </Button>
+        );
     } else {
         const connect = async () => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -19,7 +23,11 @@ const ConnectButton = ({ t }: { readonly t: TFunction }): ReactElement => {
             dispatch(updateIsUserConnectedAction(true, address));
         };
 
-        return <Button onClick={connect}>Connect wallet</Button>;
+        return (
+            <Button block onClick={connect}>
+                {t("connect-wallet")}
+            </Button>
+        );
     }
 };
 

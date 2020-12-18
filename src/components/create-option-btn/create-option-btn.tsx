@@ -13,9 +13,17 @@ type CreateOptionProps = {
 const CreateOptionBtn = ({ t, submitState, linkString }: CreateOptionProps) => {
     switch (submitState) {
         case SubmitStates.None:
-            return <Button type="submit">{t("create-option")}</Button>;
+            return (
+                <Button block type="submit">
+                    {t("create-option")}
+                </Button>
+            );
         case SubmitStates.Processing:
-            return <Button disabled>{t("processing-creation")}</Button>;
+            return (
+                <Button block disabled>
+                    {t("processing-creation")}
+                </Button>
+            );
         case SubmitStates.Success:
             return (
                 <Col>
@@ -30,7 +38,11 @@ const CreateOptionBtn = ({ t, submitState, linkString }: CreateOptionProps) => {
                 </Col>
             );
         case SubmitStates.Failure:
-            return <Button disabled>Failed (placeholder)</Button>;
+            return (
+                <Button block disabled>
+                    Failed (placeholder)
+                </Button>
+            );
     }
 };
 
