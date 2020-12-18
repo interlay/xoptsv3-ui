@@ -1,5 +1,14 @@
 import React, { FormEvent, ReactElement, useState } from "react";
-import { Card, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
+import {
+    ButtonGroup,
+    Card,
+    Col,
+    Form,
+    FormControl,
+    InputGroup,
+    Row,
+    ToggleButton,
+} from "react-bootstrap";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 import { AppState, FormControlElement, SubmitStates } from "../lib/types";
@@ -129,22 +138,26 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                 <Form.Label>{t("create:type")}</Form.Label>
                             </Col>
                             <Col>
-                                <Form.Check
-                                    inline
-                                    label={t("create:type-american")}
-                                    type={"radio"}
-                                    name="optionType"
-                                    //value={state.optionType}
-                                    //onChange={handleChange}
-                                />
-                                <Form.Check
-                                    inline
-                                    label={t("create:type-european")}
-                                    type={"radio"}
-                                    name="optionType"
-                                    //value={state.optionType}
-                                    //onChange={handleChange}
-                                />
+                                <ButtonGroup toggle>
+                                    <ToggleButton
+                                        type="radio"
+                                        name="radio"
+                                        value="European"
+                                        checked={state.optionType === "European"}
+                                        onChange={handleChange}
+                                    >
+                                        {t("create:type-european")}
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        type="radio"
+                                        name="radio"
+                                        value="American"
+                                        checked={state.optionType === "American"}
+                                        onChange={handleChange}
+                                    >
+                                        {t("create:type-american")}
+                                    </ToggleButton>
+                                </ButtonGroup>
                             </Col>
                         </Form.Group>
                     </fieldset>
