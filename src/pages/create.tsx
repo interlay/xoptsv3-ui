@@ -159,6 +159,14 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                 onChange={handleChangeDate}
                             />
                         </Col>
+                        <Col>
+                            {
+                                // type error should be fixed once next-i18next pulls in
+                                // react-i18next 11.8.0, giving a fully type-safe
+                                // translation function
+                            }
+                            <Form.Control readOnly plaintext value={t("noon-time")} />
+                        </Col>
                     </Form.Group>
                     <Form.Group as={Row}>
                         <Col>

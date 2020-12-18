@@ -2,11 +2,12 @@ import { TFunction } from "next-i18next";
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { withTranslation } from "../../common/i18n";
+import { WithTranslation } from "next-i18next";
 
 type CopyButtonProps = {
     readonly t: TFunction;
     linkString: string;
-};
+} & WithTranslation;
 
 enum CopyStates {
     None,

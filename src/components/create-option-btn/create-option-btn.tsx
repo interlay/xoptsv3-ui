@@ -1,15 +1,14 @@
-import { TFunction } from "next-i18next";
 import React from "react";
 import { Button, Col, Form, InputGroup } from "react-bootstrap";
 import { SubmitStates } from "../../lib/types";
 import { withTranslation } from "../../common/i18n";
 import CopyButton from "./copy-button";
+import { WithTranslation } from "next-i18next";
 
 type CreateOptionProps = {
-    readonly t: TFunction;
     submitState: SubmitStates;
     linkString: string;
-};
+} & WithTranslation;
 
 const CreateOptionBtn = ({ t, submitState, linkString }: CreateOptionProps) => {
     switch (submitState) {

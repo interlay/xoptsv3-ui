@@ -11,5 +11,6 @@
     "connect-wallet": "Connect wallet",
     "copy": "Copy",
     "copy-success": "Copied!",
-    "copy-failure": "Copy failed"
+    "copy-failure": "Copy failed",
+    "noon-time": "12:00 UTC"
 }
