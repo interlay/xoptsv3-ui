@@ -1,0 +1,16 @@
+{
+    "new-option": "New Option",
+    "new-option-subtext": "Create a custom option contract",
+    "spot": "Spot",
+    "spot-price": "{{price}} {{collateral}}/{{underlying}}",
+    "spot-updated": "Updated {{time}}s ago",
+    "missing-metamask": "Please install metamask!",
+    "BTC": "BTC",
+    "USDT": "USDT",
+    "DAI": "DAI",
+    "connect-wallet": "Connect wallet",
+    "copy": "Copy",
+    "copy-success": "Copied!",
+    "copy-failure": "Copy failed",
+    "noon-time": "12:00 UTC"
+}

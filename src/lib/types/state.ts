@@ -1,6 +1,6 @@
 import { CombinedState, Store } from "redux";
 import { rootReducer } from "../reducers";
-import { UserActions } from "./actions";
+import { CombinedActions } from "./actions";
 import { User } from "../entities";
 
 export type AppState = ReturnType<typeof rootReducer>;
@@ -14,4 +14,4 @@ export type StoreType = {
     user: User;
 };
 
-export type StoreState = Store<CombinedState<StoreType>, UserActions> & dispatcher;
+export type StoreState = Store<CombinedState<StoreType>, CombinedActions> & dispatcher;
