@@ -1,9 +1,17 @@
+import { Optional } from "../src/lib/types";
 import { MockXOpts } from "./mock";
-import { XOpts } from "./xopts";
+import { ethers, Signer } from "ethers";
+import { DefaultXOpts, XOpts } from "./xopts";
+import { getAddresses } from "./addresses";
 
-export async function createXOpts(network?: string): Promise<XOpts> {
-    if (network === "mock") {
+export async function createXOpts(
+    provider: Optional<ethers.providers.Provider>,
+    signer: Optional<Signer> = null
+): Promise<XOpts> {
+    if (!provider) {
         return new MockXOpts();
     }
-    throw new Error("only implemented for mock");
+    const network = await provider.getNetwork();
+    const addresses = getAddresses(network);
+    return new DefaultXOpts(addresses, provider, signer);
 }

@@ -15,6 +15,6 @@
         "noEmit": true,
         "jsx": "preserve"
     },
-    "include": ["src", "xopts-lib"],
+    "include": ["src", "xopts-lib", "xoptsv3-contracts"],
     "exclude": ["node_modules"]
 }
