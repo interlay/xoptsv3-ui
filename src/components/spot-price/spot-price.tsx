@@ -13,7 +13,7 @@ type SpotPriceProps = {
 } & WithTranslation;
 
 const SpotPrice = ({ t, collateral, underlying }: SpotPriceProps) => {
-    const price = useSelector((state: AppState) => state.prices.price).toFixed(0);
+    const amount = useSelector((state: AppState) => state.prices.price).toFixed(0);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const SpotPrice = ({ t, collateral, underlying }: SpotPriceProps) => {
     return (
         <>
             <Row>{t("spot")}</Row>
-            <Row as="h5">{t("spot-price", { price, collateral, underlying })}</Row>
+            <Row as="h5">{t("exchange-rate", { amount, collateral, underlying })}</Row>
             <UpdateTicker />
         </>
     );

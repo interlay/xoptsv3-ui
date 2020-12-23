@@ -4,15 +4,15 @@ import {
     Card,
     Col,
     Form,
-    FormControl,
-    InputGroup,
     Row,
     ToggleButton,
+    InputGroup,
+    FormControl,
 } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import DatePicker from "react-datepicker";
 import { AppState, FormControlElement, SubmitStates } from "../lib/types";
 import { TFunction } from "next-i18next";
+import DatePicker from "react-datepicker";
 import ConnectButton from "../components/connect-button/connect-button";
 import SpotPrice from "../components/spot-price/spot-price";
 import CreateOptionBtn from "../components/create-option-btn/create-option-btn";
@@ -28,6 +28,8 @@ const VALIDITY_OPTIONS = {
 };
 
 const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
+    const NOW = Date.now(); //update on every re-render
+
     const isConnected = useSelector((state: AppState) => state.user.isConnected);
 
     const defaultState = createDefault();
@@ -147,8 +149,8 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                             <ToggleButton
                                                 type="radio"
                                                 name="optionType"
-                                                value="European"
-                                                checked={state.optionType === "European"}
+                                                value="european"
+                                                checked={state.optionType === "european"}
                                                 onChange={handleChange}
                                             >
                                                 {t("create:type-european")}
@@ -156,8 +158,8 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                             <ToggleButton
                                                 type="radio"
                                                 name="optionType"
-                                                value="American"
-                                                checked={state.optionType === "American"}
+                                                value="american"
+                                                checked={state.optionType === "american"}
                                                 onChange={handleChange}
                                             >
                                                 {t("create:type-american")}
@@ -218,23 +220,26 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             </Form.Group>
                             <Form.Group as={Row}>
                                 <Col xs={3}>
-                                    <Form.Label>{t("create:validity")}</Form.Label>
+                                    <Form.Label>{t("validity")}</Form.Label>
                                 </Col>
                                 <Col>
                                     <Form.Control
                                         as="select"
                                         name="validityWindow"
-                                        value={state.validityWindow}
+                                        value={state.offerExpiry}
                                         onChange={handleChange}
                                     >
                                         {VALIDITY_OPTIONS.hours.map((count) => (
-                                            <option value={hoursToMs(count)} key={`${count}h`}>
-                                                {t("create:validity-hours", { count })}
+                                            <option
+                                                value={NOW + hoursToMs(count)}
+                                                key={`${count}h`}
+                                            >
+                                                {t("validity-hours", { count })}
                                             </option>
                                         ))}
                                         {VALIDITY_OPTIONS.days.map((count) => (
-                                            <option value={daysToMs(count)} key={`${count}d`}>
-                                                {t("create:validity-days", { count })}
+                                            <option value={NOW + daysToMs(count)} key={`${count}d`}>
+                                                {t("validity-days", { count })}
                                             </option>
                                         ))}
                                     </Form.Control>
@@ -243,14 +248,14 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             <hr />
                             <Form.Group as={Row}>
                                 <Col xs={3} className="align-self-center">
-                                    <Form.Label>{t("create:profitable-until")}</Form.Label>
+                                    <Form.Label>{t("profitable-until")}</Form.Label>
                                 </Col>
                                 <Col>
                                     <Form.Control
                                         plaintext
                                         readOnly
-                                        defaultValue={t("create:profitable-cutoff", {
-                                            cutoff: profitableUntil(),
+                                        defaultValue={t("common:exchange-rate", {
+                                            amount: profitableUntil(),
                                             underlying: state.underlying,
                                             collateral: state.collateral,
                                         })}
@@ -273,4 +278,4 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
     );
 };
 
-export default withTranslation(["common", "create"])(Create);
+export default withTranslation(["create", "common"])(Create);

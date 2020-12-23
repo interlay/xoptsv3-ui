@@ -1,0 +1,15 @@
+{
+    "claim-option": "Claim Option",
+    "claim-option-subtext": "You have been offered to purchase the following contract",
+    "size": "{{amount}} {{underlying}}",
+    "strike": "{{amount}} {{collateral}}",
+    "premium": "{{amount}} {{collateral}}",
+    "seller-address": "Seller's address:",
+    "validity": "Offer valid until: ",
+    "break-even": "Break-even:",
+    "price": "Price:",
+    "claim-option-btn": "Claim option",
+    "processing-claim": "Processing...",
+    "claimed-success": "Success!",
+    "claimed-success-subtext": "View it in your positions page (TODO)"
+}

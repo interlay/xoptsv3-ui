@@ -28,3 +28,5 @@ export const getOptionLink = (serialisedOption: string): string => {
 
 export const hoursToMs = (hours: number): number => hours * 3600 * 1000;
 export const daysToMs = (days: number): number => days * 86400 * 1000;
+
+export const formatDatePretty = (date: number): string => new Date(date).toLocaleString();
