@@ -249,7 +249,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Control
                                         plaintext
                                         readOnly
-                                        defaultValue={t("create:profitable-cutoff", {
+                                        value={t("create:profitable-cutoff", {
                                             cutoff: profitableUntil(),
                                             underlying: state.underlying,
                                             collateral: state.collateral,
