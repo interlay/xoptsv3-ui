@@ -263,7 +263,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Control
                                         plaintext
                                         readOnly
-                                        defaultValue={t("common:exchange-rate", {
+                                        value={t("common:exchange-rate", {
                                             amount: profitableUntil(),
                                             underlying: state.underlying,
                                             collateral: state.collateral,
