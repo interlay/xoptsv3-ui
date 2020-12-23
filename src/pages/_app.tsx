@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import { Provider } from "react-redux";
 import TopNavigation from "../components/top-navigation/top-navigation";
 import { configureStore } from "../lib/store";
+import { appWithTranslation } from "../common/i18n";
 import "../stylesheets/app.scss";
 
 function App({ Component, pageProps }: AppProps): ReactElement {
@@ -18,4 +19,4 @@ function App({ Component, pageProps }: AppProps): ReactElement {
     );
 }
 
-export default App;
+export default appWithTranslation(App);
