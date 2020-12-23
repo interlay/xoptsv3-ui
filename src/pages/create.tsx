@@ -21,6 +21,7 @@ import { encodeOptionData, hoursToMs, daysToMs, getOptionLink } from "../common/
 import { createDefault } from "../lib/entities/option";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { TimeGranularities, usePrettyTimeTill } from "../lib/hooks/use-time-till";
 
 const VALIDITY_OPTIONS = {
     hours: [6, 12],
@@ -70,6 +71,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
     };
 
     const profitableUntil = () => Number(state.strikePrice) - Number(state.premium);
+    const tillExpiry = usePrettyTimeTill(state.expiry, TimeGranularities.Minute);
 
     return (
         <Row className="justify-content-md-center">
@@ -178,6 +180,9 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         selected={new Date(state.expiry)}
                                         onChange={handleChangeDate}
                                     />
+                                    <Form.Text>
+                                        {t("common:time-until", { time: tillExpiry })}
+                                    </Form.Text>
                                 </Col>
                                 <Col>
                                     {
@@ -185,7 +190,11 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         // react-i18next 11.8.0, giving a fully type-safe
                                         // translation function
                                     }
-                                    <Form.Control readOnly plaintext value={t("noon-time")} />
+                                    <Form.Control
+                                        readOnly
+                                        plaintext
+                                        value={t("common:noon-time")}
+                                    />
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row}>

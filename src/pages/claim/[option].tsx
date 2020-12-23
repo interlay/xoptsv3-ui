@@ -115,20 +115,16 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Label>{t("create:expiry")}</Form.Label>
                                 </Col>
                                 <Col>
-                                    <Row>
-                                        <Form.Control
-                                            type="text"
-                                            name="expiry"
-                                            readOnly
-                                            plaintext
-                                            value={formatDatePretty(state.expiry)}
-                                        />
-                                    </Row>
-                                    <Row>
-                                        <Form.Text>
-                                            {t("common:time-until", { time: tillExpiry })}
-                                        </Form.Text>
-                                    </Row>
+                                    <Form.Control
+                                        type="text"
+                                        name="expiry"
+                                        readOnly
+                                        plaintext
+                                        value={formatDatePretty(state.expiry)}
+                                    />
+                                    <Form.Text>
+                                        {t("common:time-until", { time: tillExpiry })}
+                                    </Form.Text>
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row}>
@@ -188,20 +184,16 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Label>{t("validity")}</Form.Label>
                                 </Col>
                                 <Col>
-                                    <Row>
-                                        <Form.Control
-                                            type="text"
-                                            name="expiry"
-                                            readOnly
-                                            plaintext
-                                            value={formatDatePretty(state.offerExpiry)}
-                                        />
-                                    </Row>
-                                    <Row>
-                                        <Form.Text>
-                                            {t("common:time-until", { time: tillValidity })}
-                                        </Form.Text>
-                                    </Row>
+                                    <Form.Control
+                                        type="text"
+                                        name="expiry"
+                                        readOnly
+                                        plaintext
+                                        value={formatDatePretty(state.offerExpiry)}
+                                    />
+                                    <Form.Text>
+                                        {t("common:time-until", { time: tillValidity })}
+                                    </Form.Text>
                                 </Col>
                             </Form.Group>
                             <hr />

@@ -22,7 +22,7 @@ export function usePrettyTimeTill(toTime: number, granularity: TimeGranularities
 
     const timeTill = useMemo(
         () => formatDuration(intervalToDuration({ start: dateFrom, end: toTime }), { format }),
-        [dateFrom]
+        [dateFrom, toTime]
     );
 
     useEffect(() => {
