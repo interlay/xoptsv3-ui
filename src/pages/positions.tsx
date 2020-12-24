@@ -1,8 +1,9 @@
+import { withTranslation } from "next-i18next";
 import React, { ReactElement, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Position } from "../../xopts-lib";
-import { fetchPositions } from "../lib/actions/position.action";
+import { fetchPositions } from "../lib/actions/position.actions";
 import { useXOpts } from "../lib/hooks/use-xopts";
 import { AppState } from "../lib/types";
 
@@ -25,14 +26,14 @@ function PositionRow(props: PositionRowProps): ReactElement {
     );
 }
 
-export default function Positions(): ReactElement {
+function Positions(): ReactElement {
     const xopts = useXOpts();
     const dispatch = useDispatch();
     const positions = useSelector((state: AppState) => state.positions);
     const userAddress = useSelector((state: AppState) => state.user.account);
 
     useEffect(() => {
-        if (xopts && userAddress) dispatch(fetchPositions(xopts, userAddress));
+        if (xopts && userAddress) dispatch(fetchPositions(xopts));
     }, [xopts, userAddress]);
 
     return (
@@ -59,3 +60,5 @@ export default function Positions(): ReactElement {
         </>
     );
 }
+
+export default withTranslation<"common">("common")(Positions);

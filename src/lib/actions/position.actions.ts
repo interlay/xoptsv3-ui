@@ -12,10 +12,10 @@ export function setPositions(positions: Position[]): SetPositionsAction {
     return { type: SET_POSITIONS, positions };
 }
 
-export function fetchPositions(xopts: XOpts, user: string): (dispatch: AppDispatch) => Promise<void> {
+export function fetchPositions(xopts: XOpts): (dispatch: AppDispatch) => Promise<void> {
     return async (dispatch: AppDispatch) => {
-        const positions = await xopts.loadPositions(user);
-        dispatch({ type: SET_POSITIONS, positions });
+        const positions = await xopts.loadPositions();
+        dispatch(setPositions(positions));
     };
 }
 
