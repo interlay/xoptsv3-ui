@@ -5,6 +5,8 @@ import { Optional } from "../types";
 
 type Provider = ethers.providers.Web3Provider; // will we ever use anything other than Web3Provider?
 
+let _provider: Provider;
+
 export function useEthers(): Optional<Provider> {
     const [provider, setProvider] = useState<Optional<Provider>>(null);
 
@@ -12,9 +14,15 @@ export function useEthers(): Optional<Provider> {
         if (provider) {
             return;
         }
+        if (_provider) {
+            setProvider(_provider);
+            return;
+        }
+
         detectEthereumProvider()
             .then((web3: any) => {
-                setProvider(new ethers.providers.Web3Provider(web3));
+                _provider = new ethers.providers.Web3Provider(web3);
+                setProvider(_provider);
             })
             .catch(console.error);
     });
