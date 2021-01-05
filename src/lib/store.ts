@@ -3,6 +3,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import { createLogger } from "redux-logger";
 import ReduxThunk from "redux-thunk";
 import { createDefault as createDefaultUser } from "../lib/entities/user";
+import { createDefault as createDefaultPrices } from "../lib/entities/priceData";
 import { rootReducer } from "./reducers";
 import { AppState, StoreType } from "./types";
 
@@ -13,14 +14,17 @@ const STORAGE_KEY = "APP_STORAGE";
 const hasLocalStorage = typeof window !== "undefined" && window.localStorage;
 
 function loadState(): StoreType {
-    if (hasLocalStorage) {
-        const savedState = localStorage.getItem(STORAGE_KEY);
-        if (savedState) {
-            return JSON.parse(savedState);
-        }
-    }
+    // if (hasLocalStorage) {
+    //     const savedState = localStorage.getItem(STORAGE_KEY);
+    //     if (savedState) {
+    //         return JSON.parse(savedState);
+    //     }
+    // }
     return {
         user: createDefaultUser(),
+        prices: createDefaultPrices(),
+        options: { optionsCache: [], currentOption: null },
+        positions: [],
     };
 }
 

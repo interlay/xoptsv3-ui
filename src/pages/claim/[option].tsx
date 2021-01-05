@@ -2,21 +2,38 @@ import { TFunction, withTranslation } from "next-i18next";
 import React, { FormEvent, ReactElement, useMemo, useState } from "react";
 import { Card, Col, Form, Row } from "react-bootstrap";
 import { useRouter } from "next/router";
+import { utils } from "ethers";
 import ConnectButton from "../../components/connect-button/connect-button";
 import SpotPrice from "../../components/spot-price/spot-price";
 import ClaimOptionBtn from "../../components/claim-option-btn/claim-option-btn";
-import { createDefault } from "../../lib/entities/option";
+import { createDefault } from "../../../xopts-lib/models/option";
 import { useSelector } from "react-redux";
 import { AppState, SubmitStates } from "../../lib/types";
 import { formatDatePretty } from "../../common/utils";
-import { TimeGranularities, usePrettyTimeTill, useTestHook } from "../../lib/hooks/use-time-till";
+import { TimeGranularities, usePrettyTimeTill } from "../../lib/hooks/use-time-till";
+import { useXOpts } from "../../lib/hooks/use-xopts";
 
 const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
     const isConnected = useSelector((state: AppState) => state.user.isConnected);
-    const { option } = useRouter().query;
-    console.log(option);
+    const xopts = useXOpts();
+    let { option } = useRouter().query;
+    option = !option ? "" : Array.isArray(option) ? option[0] : option;
+    const optionId = utils.isBytesLike(option) ? option : "";
+    console.log("Querystring option: ", optionId);
 
     const [state, setState] = useState(createDefault());
+
+    (async () => {
+        if (optionId === "") return console.log("No option ID.");
+        if (!xopts) return console.log("XOpts not available");
+
+        if (state.id !== optionId) {
+            console.log("Dispatching reload");
+            const option = await xopts.loadOption(optionId);
+            console.log("Setting new state");
+            setState(option);
+        }
+    })();
 
     const [submitState, setSubmitState] = useState(SubmitStates.None);
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -40,7 +57,12 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
         state.size,
     ]);
 
-    return (
+    return optionId === "" ? (
+        <Card>
+            <Card.Header>Option not found</Card.Header>
+            <Card.Body>No option offer exists with this ID.</Card.Body>
+        </Card>
+    ) : (
         <Row className="justify-content-md-center">
             <Col xs={12} sm={12} md={10} lg={8}>
                 <Card className="my-5">

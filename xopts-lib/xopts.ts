@@ -9,7 +9,8 @@ import { Option, Position } from "./models";
 
 export interface XOpts {
     loadPositions(): Promise<Position[]>;
-    saveOption(option: Option): Promise<number>;
+    saveOption(option: Option): Promise<string>;
+    loadOption(optionId: string): Promise<Option>;
 }
 
 export class DefaultXOpts implements XOpts {
@@ -41,7 +42,7 @@ export class DefaultXOpts implements XOpts {
         return Promise.resolve([]);
     }
 
-    async saveOption(option: Option): Promise<number> {
+    async saveOption(option: Option): Promise<string> {
         if (!this.signer) {
             throw new Error("wallet not connected");
         }
@@ -60,9 +61,9 @@ export class DefaultXOpts implements XOpts {
             recipientWhitelist: [signerAddress],
             expiry: option.expiry,
             underlying: utils.formatBytes32String(option.underlying),
-            european: option.optionType === "European",
+            european: option.optionType === "european",
             strikePrice: option.strikePrice,
-            validityWindow: option.validityWindow,
+            offerExpiry: option.offerExpiry,
             size: option.size,
             executedBy: nullAddress, // will be overwritten
             exercised: false, // will be overwritten
@@ -78,5 +79,27 @@ export class DefaultXOpts implements XOpts {
             return events[0].args.id;
         }
         throw new Error("failed to create option");
+    }
+
+    async loadOption(optionId: string): Promise<Option> {
+        console.log("GETTING OPTION", optionId);
+        const opt = await this.optionStorage.getOption(optionId.toString());
+        console.log(opt);
+        return Promise.resolve({
+            id: opt.id,
+            size: opt.size.toString(),
+            underlying: utils.parseBytes32String(opt.underlying),
+            strikePrice: opt.strikePrice.toString(),
+            collateral: Object.fromEntries(
+                Object.entries(this.addresses.collaterals).map(([col, add]) => [add, col])
+            )[opt.collateral.toString().toLowerCase()],
+            optionType: opt.european ? "european" : "american",
+            expiry: opt.expiry.toNumber(),
+            premium: opt.premium.toString(),
+            sellerBTCAddress: opt.sellerBTCAddress,
+            sellerColAddress: opt.writer,
+            offerExpiry: opt.offerExpiry.toNumber(),
+            recipientWhitelist: opt.recipientWhitelist.toString(),
+        });
     }
 }

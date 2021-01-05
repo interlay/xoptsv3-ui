@@ -1,7 +1,7 @@
-export type OptionType = "European" | "American";
+export type OptionType = "european" | "american";
 
 export type Option = {
-    id?: number;
+    id?: string;
     size: string;
     underlying: string;
     strikePrice: string;
@@ -10,7 +10,8 @@ export type Option = {
     expiry: number;
     premium: string;
     sellerBTCAddress: string;
-    validityWindow: number;
+    sellerColAddress: string;
+    offerExpiry: number;
     recipientWhitelist: string;
 };
 
@@ -23,11 +24,12 @@ export function createDefault(overrides: PartialOption = {}): Option {
             underlying: "BTC",
             strikePrice: "",
             collateral: "USDT",
-            optionType: "American",
+            optionType: "american",
             expiry: Date.now(),
             premium: "",
             sellerBTCAddress: "",
-            validityWindow: 0,
+            sellerColAddress: "",
+            offerExpiry: Date.now(),
             recipientWhitelist: "",
         },
         overrides
