@@ -1,17 +1,35 @@
-// TODO: merge with PR
 export type OptionType = "European" | "American";
 
-// TODO: use fixed point representation for numerical values
 export type Option = {
-    size: number;
-    address: string;
+    id?: number;
+    size: string;
     underlying: string;
+    strikePrice: string;
     collateral: string;
-    strikePrice: number;
     optionType: OptionType;
     expiry: number;
-    // premium: string;
+    premium: string;
     sellerBTCAddress: string;
     validityWindow: number;
-    // recipientWhitelist: string;
+    recipientWhitelist: string;
 };
+
+type PartialOption = Partial<Option>;
+
+export function createDefault(overrides: PartialOption = {}): Option {
+    return Object.assign(
+        {
+            size: "",
+            underlying: "BTC",
+            strikePrice: "",
+            collateral: "USDT",
+            optionType: "American",
+            expiry: Date.now(),
+            premium: "",
+            sellerBTCAddress: "",
+            validityWindow: 0,
+            recipientWhitelist: "",
+        },
+        overrides
+    );
+}

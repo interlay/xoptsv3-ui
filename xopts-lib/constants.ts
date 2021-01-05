@@ -1,3 +1,5 @@
+export const nullAddress = "0x" + "0".repeat(40);
+
 export const WETH = {
     mainnet: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
 };

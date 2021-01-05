@@ -1,3 +1,4 @@
+import { TFunction } from "next-i18next";
 import React, { FormEvent, ReactElement, useState } from "react";
 import {
     ButtonGroup,
@@ -9,19 +10,20 @@ import {
     InputGroup,
     FormControl,
 } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import { AppState, FormControlElement, SubmitStates } from "../lib/types";
-import { TFunction } from "next-i18next";
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useDispatch, useSelector } from "react-redux";
+import { createDefault } from "../../xopts-lib/models/option";
+import { daysToMs, encodeOptionData, getOptionLink, hoursToMs } from "../common/utils";
 import ConnectButton from "../components/connect-button/connect-button";
-import SpotPrice from "../components/spot-price/spot-price";
 import CreateOptionBtn from "../components/create-option-btn/create-option-btn";
 import { withTranslation } from "../common/i18n";
-import { encodeOptionData, hoursToMs, daysToMs, getOptionLink } from "../common/utils";
-import { createDefault } from "../lib/entities/option";
 
-import "react-datepicker/dist/react-datepicker.css";
 import { TimeGranularities, usePrettyTimeTill } from "../lib/hooks/use-time-till";
+import SpotPrice from "../components/spot-price/spot-price";
+import { storeOption } from "../lib/actions";
+import { useXOpts } from "../lib/hooks/use-xopts";
 
 const VALIDITY_OPTIONS = {
     hours: [6, 12],
@@ -33,16 +35,20 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
 
     const isConnected = useSelector((state: AppState) => state.user.isConnected);
 
-    const defaultState = createDefault();
-    defaultState.validityWindow = hoursToMs(VALIDITY_OPTIONS.hours[0]);
-    const [state, setState] = useState(defaultState);
+    const dispatch = useDispatch();
+    const defaultOption = createDefault({
+        offerExpiry: NOW + hoursToMs(VALIDITY_OPTIONS.hours[0]),
+    });
+    const [option, setOption] = useState(defaultOption);
 
     const [submitState, setSubmitState] = useState(SubmitStates.None);
     const [serialisedOpt, setSerialisedOpt] = useState("");
 
+    const xopts = useXOpts();
+
     const handleChange = (e: React.ChangeEvent<FormControlElement>) =>
-        setState({
-            ...state,
+        setOption({
+            ...option,
             [e.target.name]: e.target.value,
         });
 
@@ -51,8 +57,8 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
         date.setUTCMinutes(0);
         date.setUTCSeconds(0);
         date.setUTCMilliseconds(0);
-        setState({
-            ...state,
+        setOption({
+            ...option,
             expiry: date.getTime(),
         });
     };
@@ -60,18 +66,30 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSubmitState(SubmitStates.Processing);
-        console.log(state);
+
+        if (xopts) {
+            // TODO: at this point, we should start to load but not update the view yet
+            // We should only update the view once the option has been stored
+            // We do not have a direct way to wait on the option creation so
+            // but it will be added to the store so we can check if it is there or not
+            // We can pass a custom ID to the option so I suggest generating
+            // a UUID here and set it as "pending" in the state
+            // until the option with the given UUID appears in the state
+            dispatch(storeOption(xopts, option));
+        } else {
+            console.error("xopts not available");
+        }
 
         //mock create option
         await new Promise<void>((resolve) => setTimeout(() => resolve(), 4000));
 
-        setSerialisedOpt(encodeOptionData(state));
+        setSerialisedOpt(encodeOptionData(option));
         console.log(serialisedOpt);
         setSubmitState(SubmitStates.Success);
     };
 
-    const profitableUntil = () => Number(state.strikePrice) - Number(state.premium);
-    const tillExpiry = usePrettyTimeTill(state.expiry, TimeGranularities.Minute);
+    const profitableUntil = () => Number(option.strikePrice) - Number(option.premium);
+    const tillExpiry = usePrettyTimeTill(option.expiry, TimeGranularities.Minute);
 
     return (
         <Row className="justify-content-md-center">
@@ -85,8 +103,8 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             </Col>
                             <Col>
                                 <SpotPrice
-                                    collateral={state.collateral}
-                                    underlying={state.underlying}
+                                    collateral={option.collateral}
+                                    underlying={option.underlying}
                                 />
                             </Col>
                         </Row>
@@ -101,7 +119,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Control
                                         type="number"
                                         name="size"
-                                        value={state.size}
+                                        value={option.size}
                                         onChange={handleChange}
                                     />
                                 </Col>
@@ -110,7 +128,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         as="select"
                                         disabled
                                         name="underlying"
-                                        value={state.underlying}
+                                        value={option.underlying}
                                         onChange={handleChange}
                                     >
                                         <option value="BTC">{t("BTC")}</option>
@@ -125,7 +143,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Control
                                         type="number"
                                         name="strikePrice"
-                                        value={state.strikePrice}
+                                        value={option.strikePrice}
                                         onChange={handleChange}
                                     />
                                 </Col>
@@ -133,7 +151,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Control
                                         as="select"
                                         name="collateral"
-                                        value={state.collateral}
+                                        value={option.collateral}
                                         onChange={handleChange}
                                     >
                                         <option value="USDT">{t("USDT")}</option>
@@ -152,7 +170,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                                 type="radio"
                                                 name="optionType"
                                                 value="european"
-                                                checked={state.optionType === "european"}
+                                                checked={option.optionType === "european"}
                                                 onChange={handleChange}
                                             >
                                                 {t("create:type-european")}
@@ -161,7 +179,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                                 type="radio"
                                                 name="optionType"
                                                 value="american"
-                                                checked={state.optionType === "american"}
+                                                checked={option.optionType === "american"}
                                                 onChange={handleChange}
                                             >
                                                 {t("create:type-american")}
@@ -177,7 +195,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                 <Col>
                                     <DatePicker
                                         name="expiry"
-                                        selected={new Date(state.expiry)}
+                                        selected={new Date(option.expiry)}
                                         onChange={handleChangeDate}
                                     />
                                     <Form.Text>
@@ -206,11 +224,11 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         <FormControl
                                             type="number"
                                             name="premium"
-                                            value={state.premium}
+                                            value={option.premium}
                                             onChange={handleChange}
                                         ></FormControl>
                                         <InputGroup.Append>
-                                            <InputGroup.Text>{state.collateral}</InputGroup.Text>
+                                            <InputGroup.Text>{option.collateral}</InputGroup.Text>
                                         </InputGroup.Append>
                                     </InputGroup>
                                 </Col>
@@ -222,7 +240,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                 <Col>
                                     <Form.Control
                                         name="sellerBTCAddress"
-                                        value={state.sellerBTCAddress}
+                                        value={option.sellerBTCAddress}
                                         onChange={handleChange}
                                     />
                                 </Col>
@@ -235,7 +253,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Control
                                         as="select"
                                         name="validityWindow"
-                                        value={state.offerExpiry}
+                                        value={option.offerExpiry}
                                         onChange={handleChange}
                                     >
                                         {VALIDITY_OPTIONS.hours.map((count) => (
@@ -265,8 +283,8 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         readOnly
                                         value={t("common:exchange-rate", {
                                             amount: profitableUntil(),
-                                            underlying: state.underlying,
-                                            collateral: state.collateral,
+                                            underlying: option.underlying,
+                                            collateral: option.collateral,
                                         })}
                                     />
                                 </Col>

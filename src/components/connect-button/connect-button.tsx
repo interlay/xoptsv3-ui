@@ -31,4 +31,4 @@ const ConnectButton = ({ t }: { readonly t: TFunction }): ReactElement => {
     }
 };
 
-export default withTranslation("common")(ConnectButton);
+export default withTranslation<"common">("common")(ConnectButton);

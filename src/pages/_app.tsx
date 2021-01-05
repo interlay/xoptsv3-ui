@@ -6,9 +6,14 @@ import TopNavigation from "../components/top-navigation/top-navigation";
 import { configureStore } from "../lib/store";
 import { appWithTranslation } from "../common/i18n";
 import "../stylesheets/app.scss";
+import { useXOpts } from "../lib/hooks/use-xopts";
 
 function App({ Component, pageProps }: AppProps): ReactElement {
     const store = configureStore();
+
+    // NOTE: pre-load even if not used in navigated page
+    useXOpts();
+
     return (
         <Provider store={store}>
             <TopNavigation />
