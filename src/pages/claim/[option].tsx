@@ -21,17 +21,24 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
     const optionId = utils.isBytesLike(option) ? option : "";
     console.log("Querystring option: ", optionId);
 
+    const [wasFound, setWasFound] = useState(optionId !== "");
+
     const [state, setState] = useState(createDefault());
 
     (async () => {
-        if (optionId === "") return console.log("No option ID.");
+        if (!wasFound) return console.log("No option ID.");
         if (!xopts) return console.log("XOpts not available");
 
         if (state.id !== optionId) {
             console.log("Dispatching reload");
             const option = await xopts.loadOption(optionId);
-            console.log("Setting new state");
-            setState(option);
+            if (option.id === "0x" + "0".repeat(64)) {
+                // no such option
+                setWasFound(false);
+            } else {
+                console.log("Setting new state for option ", option.id);
+                setState(option);
+            }
         }
     })();
 
@@ -41,9 +48,13 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
         setSubmitState(SubmitStates.Processing);
         console.log(state);
 
-        //mock create option
-        await new Promise<void>((resolve) => setTimeout(() => resolve(), 4000));
-        setSubmitState(SubmitStates.Success);
+        if (xopts) {
+            await xopts.executeOption(state.id);
+            setSubmitState(SubmitStates.Success);
+        } else {
+            console.log("XOpts not available");
+            setSubmitState(SubmitStates.Failure);
+        }
     };
 
     const tillExpiry = usePrettyTimeTill(state.expiry, TimeGranularities.Minute);
@@ -57,12 +68,16 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
         state.size,
     ]);
 
-    return optionId === "" ? (
-        <Card>
-            <Card.Header>Option not found</Card.Header>
-            <Card.Body>No option offer exists with this ID.</Card.Body>
-        </Card>
-    ) : (
+    if (!wasFound) {
+        return (
+            <Card>
+                <Card.Header>Option not found</Card.Header>
+                <Card.Body>No option offer exists with this ID.</Card.Body>
+            </Card>
+        );
+    }
+
+    return (
         <Row className="justify-content-md-center">
             <Col xs={12} sm={12} md={10} lg={8}>
                 <Card className="my-5">
@@ -172,30 +187,30 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                 </Col>
                                 <Col>
                                     <Row>
-                                        <Col xs={1}>
-                                            <Form.Label>{t(state.underlying)}</Form.Label>
-                                        </Col>
                                         <Col>
                                             <Form.Control
                                                 type="text"
                                                 name="sellerBTCAddress"
                                                 readOnly
                                                 plaintext
-                                                value={state.sellerBTCAddress}
+                                                value={t("currency-n-address", {
+                                                    currency: t(state.underlying),
+                                                    address: state.sellerBTCAddress,
+                                                })}
                                             />
                                         </Col>
                                     </Row>
                                     <Row>
-                                        <Col xs={1}>
-                                            <Form.Label>{t(state.collateral)}</Form.Label>
-                                        </Col>
                                         <Col>
                                             <Form.Control
                                                 type="text"
                                                 name="sellerColAddress"
                                                 readOnly
                                                 plaintext
-                                                value={state.sellerColAddress}
+                                                value={t("currency-n-address", {
+                                                    currency: t(state.collateral),
+                                                    address: state.sellerColAddress,
+                                                })}
                                             />
                                         </Col>
                                     </Row>

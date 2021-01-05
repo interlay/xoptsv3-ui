@@ -7,10 +7,18 @@ import { Addresses } from "./addresses";
 import { nullAddress } from "./constants";
 import { Option, Position } from "./models";
 
+//bootleg monetary lib
+const decimals = {
+    satoshi: 100000000,
+    DAI: 1000000000, //gigadai. this is temp anyway and avoids a bignumber lib
+    USDT: 1000000,
+};
+
 export interface XOpts {
     loadPositions(): Promise<Position[]>;
     saveOption(option: Option): Promise<string>;
     loadOption(optionId: string): Promise<Option>;
+    executeOption(optionId: string): Promise<void>;
 }
 
 export class DefaultXOpts implements XOpts {
@@ -54,17 +62,22 @@ export class DefaultXOpts implements XOpts {
         }
         const collateralAddress = this.addresses.collaterals[option.collateral];
 
+        //very dirty conversion
+        const size = Number(option.size) * decimals.satoshi;
+        const premium = Number(option.premium) * decimals[option.collateral];
+        const strike = Number(option.strikePrice) * decimals[option.collateral];
+
         const contractOption = {
             collateral: collateralAddress,
-            premium: option.premium,
+            premium: premium,
             sellerBTCAddress: option.sellerBTCAddress,
             recipientWhitelist: [signerAddress],
             expiry: option.expiry,
             underlying: utils.formatBytes32String(option.underlying),
             european: option.optionType === "european",
-            strikePrice: option.strikePrice,
+            strikePrice: strike,
             offerExpiry: option.offerExpiry,
-            size: option.size,
+            size: size,
             executedBy: nullAddress, // will be overwritten
             exercised: false, // will be overwritten
             id: "0x" + "0".repeat(64), // will be overwritten
@@ -82,24 +95,31 @@ export class DefaultXOpts implements XOpts {
     }
 
     async loadOption(optionId: string): Promise<Option> {
-        console.log("GETTING OPTION", optionId);
         const opt = await this.optionStorage.getOption(optionId.toString());
         console.log(opt);
+
+        const collateral: "USDT" | "DAI" = Object.fromEntries(
+            Object.entries(this.addresses.collaterals).map(([col, add]) => [add, col])
+        )[opt.collateral.toString().toLowerCase()] as "USDT" | "DAI";
+
         return Promise.resolve({
             id: opt.id,
-            size: opt.size.toString(),
+            size: (opt.size.toNumber() / decimals.satoshi).toString(),
             underlying: utils.parseBytes32String(opt.underlying),
-            strikePrice: opt.strikePrice.toString(),
-            collateral: Object.fromEntries(
-                Object.entries(this.addresses.collaterals).map(([col, add]) => [add, col])
-            )[opt.collateral.toString().toLowerCase()],
+            strikePrice: (opt.strikePrice.toNumber() / decimals[collateral]).toString(),
+            collateral: collateral,
             optionType: opt.european ? "european" : "american",
             expiry: opt.expiry.toNumber(),
-            premium: opt.premium.toString(),
+            premium: (opt.premium.toNumber() / decimals[collateral]).toString(),
             sellerBTCAddress: opt.sellerBTCAddress,
             sellerColAddress: opt.writer,
             offerExpiry: opt.offerExpiry.toNumber(),
             recipientWhitelist: opt.recipientWhitelist.toString(),
         });
+    }
+
+    async executeOption(optionId: string): Promise<void> {
+        console.log("Executing option ", optionId);
+        await this.optionStorage.executeOption(optionId);
     }
 }

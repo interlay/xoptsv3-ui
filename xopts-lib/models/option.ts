@@ -1,7 +1,7 @@
 export type OptionType = "european" | "american";
 
 export type Option = {
-    id?: string;
+    id: string;
     size: string;
     underlying: string;
     strikePrice: string;
@@ -20,6 +20,7 @@ type PartialOption = Partial<Option>;
 export function createDefault(overrides: PartialOption = {}): Option {
     return Object.assign(
         {
+            id: "0x" + "0".repeat(64),
             size: "",
             underlying: "BTC",
             strikePrice: "",

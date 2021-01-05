@@ -68,24 +68,15 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
         setSubmitState(SubmitStates.Processing);
 
         if (xopts) {
-            // TODO: at this point, we should start to load but not update the view yet
-            // We should only update the view once the option has been stored
-            // We do not have a direct way to wait on the option creation so
-            // but it will be added to the store so we can check if it is there or not
-            // We can pass a custom ID to the option so I suggest generating
-            // a UUID here and set it as "pending" in the state
-            // until the option with the given UUID appears in the state
-            dispatch(storeOption(xopts, option));
+            console.log(option);
+            const optionId = await xopts.saveOption(option);
+            setSerialisedOpt(optionId);
+            console.log(serialisedOpt);
+            setSubmitState(SubmitStates.Success);
         } else {
             console.error("xopts not available");
+            setSubmitState(SubmitStates.Failure);
         }
-
-        //mock create option
-        await new Promise<void>((resolve) => setTimeout(() => resolve(), 4000));
-
-        setSerialisedOpt(encodeOptionData(option));
-        console.log(serialisedOpt);
-        setSubmitState(SubmitStates.Success);
     };
 
     const profitableUntil = () => Number(option.strikePrice) - Number(option.premium);

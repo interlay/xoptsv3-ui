@@ -16,4 +16,12 @@ export class MockXOpts implements XOpts {
             return { ...v };
         });
     }
+
+    async loadOption(optionId: string): Promise<Option> {
+        // not implemented
+    }
+
+    async executeOption(optionId: string): Promise<void> {
+        // not implemnented
+    }
 }

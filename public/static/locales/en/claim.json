@@ -5,6 +5,7 @@
     "strike": "{{amount}} {{collateral}}",
     "premium": "{{amount}} {{collateral}}",
     "seller-address": "Seller's address:",
+    "currency-n-address": "{{currency}}: {{address}}",
     "validity": "Offer valid until: ",
     "break-even": "Break-even:",
     "price": "Price:",
