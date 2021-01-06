@@ -88,28 +88,21 @@ export class DefaultXOpts implements XOpts {
         const executedOptions: ContractOption[] = await this.optionStorage.listExecutedOptions(
             signerAddress
         );
-        console.log("Written option:");
-        console.log(writtenOptions);
-        console.log("Executed option:");
-        console.log(executedOptions);
-        console.log("Processed options:");
-        //return Promise.resolve(
-        const optsall = writtenOptions
-            .map((opt) => ({
-                option: contractOptToLibOpt(opt, this.addresses),
-                written: true,
-                buyerColAddress: opt.executedBy,
-            }))
-            .concat(
-                executedOptions.map((opt) => ({
-                    written: false,
-                    buyerColAddress: opt.executedBy,
+        return Promise.resolve(
+            writtenOptions
+                .map((opt) => ({
                     option: contractOptToLibOpt(opt, this.addresses),
+                    written: true,
+                    buyerColAddress: opt.executedBy,
                 }))
-            );
-        //);
-        console.log(optsall);
-        return optsall;
+                .concat(
+                    executedOptions.map((opt) => ({
+                        written: false,
+                        buyerColAddress: opt.executedBy,
+                        option: contractOptToLibOpt(opt, this.addresses),
+                    }))
+                )
+        );
     }
 
     async saveOption(option: Option): Promise<string> {
@@ -145,7 +138,6 @@ export class DefaultXOpts implements XOpts {
             id: "0x" + "0".repeat(64), // will be overwritten
             writer: nullAddress, // will be overwritten
         };
-        console.log("creating", contractOption);
 
         const tx = await this.optionStorage.storeOption(contractOption);
         const receipt = await tx.wait();
@@ -158,13 +150,11 @@ export class DefaultXOpts implements XOpts {
 
     async loadOption(optionId: string): Promise<Option> {
         const opt = await this.optionStorage.getOption(optionId.toString());
-        console.log(opt);
 
         return Promise.resolve(contractOptToLibOpt(opt, this.addresses));
     }
 
     async executeOption(optionId: string): Promise<void> {
-        console.log("Executing option ", optionId);
         await this.optionStorage.executeOption(optionId);
     }
 }

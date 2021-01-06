@@ -66,11 +66,9 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
         setSubmitState(SubmitStates.Processing);
 
         if (xopts) {
-            console.log(option);
             try {
                 const optionId = await xopts.saveOption(option);
                 setSerialisedOpt(optionId);
-                console.log(serialisedOpt);
                 setSubmitState(SubmitStates.Success);
             } catch (e) {
                 setSubmitState(SubmitStates.Failure);

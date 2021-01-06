@@ -19,24 +19,20 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
     let { option } = useRouter().query;
     option = !option ? "" : Array.isArray(option) ? option[0] : option;
     const optionId = utils.isBytesLike(option) ? option : "";
-    console.log("Querystring option: ", optionId);
 
     const [wasFound, setWasFound] = useState(optionId !== "");
-
     const [state, setState] = useState(createDefault());
 
     (async () => {
-        if (!wasFound) return console.log("No option ID.");
-        if (!xopts) return console.log("XOpts not available");
+        if (!wasFound) return console.log("No valid option ID.");
+        if (!xopts) return console.error("XOpts not available");
 
         if (state.id !== optionId) {
-            console.log("Dispatching reload");
             const option = await xopts.loadOption(optionId);
             if (option.id === "0x" + "0".repeat(64)) {
                 // no such option
                 setWasFound(false);
             } else {
-                console.log("Setting new state for option ", option.id);
                 setState(option);
             }
         }
@@ -46,13 +42,12 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSubmitState(SubmitStates.Processing);
-        console.log(state);
 
         if (xopts) {
             await xopts.executeOption(state.id);
             setSubmitState(SubmitStates.Success);
         } else {
-            console.log("XOpts not available");
+            console.error("XOpts not available");
             setSubmitState(SubmitStates.Failure);
         }
     };

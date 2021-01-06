@@ -14,7 +14,6 @@ type SpotPriceProps = {
 
 const SpotPrice = ({ t, collateral, underlying }: SpotPriceProps) => {
     const amount = useSelector((state: AppState) => state.prices.price).toFixed(0);
-    console.log("PR~ICE: ", amount);
     const dispatch = useDispatch();
 
     useEffect(() => {
