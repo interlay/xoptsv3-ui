@@ -31,10 +31,12 @@ const VALIDITY_OPTIONS = {
 
 const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
     const NOW = Date.now(); //update on every re-render
+    const minDate = new Date(NOW).getUTCHours() > 12 ? NOW + 3600 * 12 * 1000 : NOW;
 
     const isConnected = useSelector((state: AppState) => state.user.isConnected);
 
     const defaultOption = createDefault({
+        expiry: minDate,
         offerExpiry: NOW + hoursToMs(VALIDITY_OPTIONS.hours[0]),
     });
     const [option, setOption] = useState(defaultOption);
@@ -189,6 +191,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         name="expiry"
                                         selected={new Date(option.expiry)}
                                         onChange={handleChangeDate}
+                                        minDate={new Date(minDate)}
                                     />
                                     <Form.Text>
                                         {t("common:time-until", { time: tillExpiry })}
@@ -203,7 +206,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Control
                                         readOnly
                                         plaintext
-                                        value={t("common:noon-time")}
+                                        value={t("common:noon-time") as string}
                                     />
                                 </Col>
                             </Form.Group>
@@ -244,7 +247,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                 <Col>
                                     <Form.Control
                                         as="select"
-                                        name="validityWindow"
+                                        name="offerExpiry"
                                         value={option.offerExpiry}
                                         onChange={handleChange}
                                     >
@@ -273,11 +276,13 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Control
                                         plaintext
                                         readOnly
-                                        value={t("common:exchange-rate", {
-                                            amount: profitableUntil(),
-                                            underlying: option.underlying,
-                                            collateral: option.collateral,
-                                        })}
+                                        value={
+                                            t("common:exchange-rate", {
+                                                amount: profitableUntil(),
+                                                underlying: option.underlying,
+                                                collateral: option.collateral,
+                                            }) as string
+                                        }
                                     />
                                 </Col>
                             </Form.Group>
