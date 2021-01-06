@@ -1,19 +1,23 @@
-import { Position, Option } from "../models";
+import { Option } from "../models";
 import { XOpts } from "../xopts";
-
-import { positions } from "./db";
 
 export class MockXOpts implements XOpts {
     private options: Option[] = [];
 
-    async saveOption(option: Option): Promise<number> {
+    async saveOption(option: Option): Promise<string> {
         this.options.push(option);
-        return this.options.length;
+        return this.options.length.toString();
     }
 
-    async loadPositions(): Promise<Position[]> {
-        return positions.map((v) => {
-            return { ...v };
-        });
+    async loadPositions(): Promise<Option[]> {
+        // not implemented
+    }
+
+    async loadOption(optionId: string): Promise<Option> {
+        // not implemented
+    }
+
+    async executeOption(optionId: string): Promise<void> {
+        // not implemnented
     }
 }

@@ -1,9 +1,8 @@
 {
-    "new-option": "New Option",
-    "new-option-subtext": "Create a custom option contract",
     "spot": "Spot",
-    "spot-price": "{{price}} {{collateral}}/{{underlying}}",
+    "exchange-rate": "{{amount}} {{collateral}}/{{underlying}}",
     "spot-updated": "Updated {{time}}s ago",
+    "time-until": "in {{time}}",
     "missing-metamask": "Please install metamask!",
     "BTC": "BTC",
     "USDT": "USDT",

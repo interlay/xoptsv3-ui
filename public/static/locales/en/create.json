@@ -1,4 +1,6 @@
 {
+    "new-option": "New Option",
+    "new-option-subtext": "Create a custom option contract",
     "size": "Size",
     "strike": "Strike Price",
     "type": "Type",
@@ -13,7 +15,6 @@
     "validity-hours": "{{count}} hour",
     "validity-hours_plural": "{{count}} hours",
     "profitable-until": "Profitable until:",
-    "profitable-cutoff": "{{cutoff}} {{collateral}}/{{underlying}}",
     "create-option": "Create option",
     "processing-creation": "Processing...",
     "created-success": "Option created! Share:"

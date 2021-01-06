@@ -40,7 +40,7 @@ export default function TopNavigation(): ReactElement {
 
     return (
         <Navbar bg="light">
-            <Navbar.Brand href="#home">
+            <Navbar.Brand href="/">
                 <img
                     src="assets/xopts.png"
                     width="30"

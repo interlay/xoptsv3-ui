@@ -7,7 +7,10 @@ import {
     UPDATE_USER_NETWORK,
 } from "../types";
 
-export const updateIsUserConnectedAction = (isConnected: boolean, account?: string): UpdateIsUserConnected => ({
+export const updateIsUserConnectedAction = (
+    isConnected: boolean,
+    account?: string
+): UpdateIsUserConnected => ({
     type: UPDATE_IS_USER_CONNECTED,
     isConnected,
     account,

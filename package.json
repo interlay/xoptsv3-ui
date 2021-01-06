@@ -12,6 +12,7 @@
         "@interlay/xoptsv3-contracts": "link:../xoptsv3-contracts/",
         "@metamask/detect-provider": "^1.2.0",
         "big.js": "^6.0.3",
+        "date-fns": "^2.16.1",
         "ethers": "^5.0.24",
         "next": "10.0.3",
         "react": "^17.0.1",

@@ -1,7 +1,8 @@
 import { withTranslation } from "next-i18next";
 import React, { ReactElement, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import ConnectButton from "../components/connect-button/connect-button";
 import { Position } from "../../xopts-lib";
 import { fetchPositions } from "../lib/actions/position.actions";
 import { useXOpts } from "../lib/hooks/use-xopts";
@@ -17,11 +18,15 @@ function PositionRow(props: PositionRowProps): ReactElement {
     const { option } = position;
     return (
         <tr key={props.key}>
-            <td>{new Date(option.expiry).toLocaleDateString()}</td>
+            <td>{position.written ? "Sell" : "Buy"}</td>
+            <td>{position.written ? position.buyerColAddress : option.sellerColAddress}</td>
             <td>{option.strikePrice.toLocaleString()}</td>
-            <td>{position.writtenAmount.toLocaleString()}</td>
-            <td>{position.boughtAmount.toLocaleString()}</td>
-            <td>{(position.writtenAmount - position.boughtAmount).toLocaleString()}</td>
+            <td>{option.size}</td>
+            <td>Performance placeholder</td>
+            <td>{new Date(option.expiry).toLocaleDateString()}</td>
+            <td>
+                <Button>Temp!</Button>
+            </td>
         </tr>
     );
 }
@@ -29,6 +34,7 @@ function PositionRow(props: PositionRowProps): ReactElement {
 function Positions(): ReactElement {
     const xopts = useXOpts();
     const dispatch = useDispatch();
+    const isConnected = useSelector((state: AppState) => state.user.isConnected);
     const positions = useSelector((state: AppState) => state.positions);
     const userAddress = useSelector((state: AppState) => state.user.account);
 
@@ -36,17 +42,20 @@ function Positions(): ReactElement {
         if (xopts && userAddress) dispatch(fetchPositions(xopts));
     }, [xopts, userAddress]);
 
+    if (!isConnected) return <ConnectButton />;
     return (
         <>
             <h1>Current Positions</h1>
-            <Table striped bordered hover>
+            <Table striped bordered hover responsive="lg">
                 <thead>
                     <tr>
-                        <th>Expiry date</th>
-                        <th>Strike price</th>
-                        <th>Written amount</th>
-                        <th>Bought amount</th>
-                        <th>Balance</th>
+                        <th>Type</th>
+                        <th>Counterparty</th>
+                        <th>Strike</th>
+                        <th>Size</th>
+                        <th>Performance</th>
+                        <th>Expiry</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 

@@ -5,24 +5,24 @@ import {
     Card,
     Col,
     Form,
-    FormControl,
-    InputGroup,
     Row,
     ToggleButton,
+    InputGroup,
+    FormControl,
 } from "react-bootstrap";
+import { AppState, FormControlElement, SubmitStates } from "../lib/types";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { createDefault } from "../../xopts-lib/models/option";
-import { withTranslation } from "../common/i18n";
-import { daysToMs, encodeOptionData, getOptionLink, hoursToMs } from "../common/utils";
+import { daysToMs, getOptionLink, hoursToMs } from "../common/utils";
 import ConnectButton from "../components/connect-button/connect-button";
 import CreateOptionBtn from "../components/create-option-btn/create-option-btn";
+import { withTranslation } from "../common/i18n";
+
+import { TimeGranularities, usePrettyTimeTill } from "../lib/hooks/use-time-till";
 import SpotPrice from "../components/spot-price/spot-price";
-import { storeOption } from "../lib/actions";
 import { useXOpts } from "../lib/hooks/use-xopts";
-import { AppDispatch } from "../lib/store";
-import { AppState, FormControlElement, SubmitStates } from "../lib/types";
 
 const VALIDITY_OPTIONS = {
     hours: [6, 12],
@@ -30,11 +30,12 @@ const VALIDITY_OPTIONS = {
 };
 
 const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
+    const NOW = Date.now(); //update on every re-render
+
     const isConnected = useSelector((state: AppState) => state.user.isConnected);
 
-    const dispatch = useDispatch<AppDispatch>();
     const defaultOption = createDefault({
-        validityWindow: hoursToMs(VALIDITY_OPTIONS.hours[0]),
+        offerExpiry: NOW + hoursToMs(VALIDITY_OPTIONS.hours[0]),
     });
     const [option, setOption] = useState(defaultOption);
 
@@ -65,27 +66,22 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
         setSubmitState(SubmitStates.Processing);
 
         if (xopts) {
-            // TODO: at this point, we should start to load but not update the view yet
-            // We should only update the view once the option has been stored
-            // We do not have a direct way to wait on the option creation so
-            // but it will be added to the store so we can check if it is there or not
-            // We can pass a custom ID to the option so I suggest generating
-            // a UUID here and set it as "pending" in the state
-            // until the option with the given UUID appears in the state
-            dispatch(storeOption(xopts, option));
+            try {
+                const optionId = await xopts.saveOption(option);
+                setSerialisedOpt(optionId);
+                setSubmitState(SubmitStates.Success);
+            } catch (e) {
+                setSubmitState(SubmitStates.Failure);
+                throw e;
+            }
         } else {
             console.error("xopts not available");
+            setSubmitState(SubmitStates.Failure);
         }
-
-        //mock create option
-        await new Promise<void>((resolve) => setTimeout(() => resolve(), 4000));
-
-        setSerialisedOpt(encodeOptionData(option));
-        console.log(serialisedOpt);
-        setSubmitState(SubmitStates.Success);
     };
 
     const profitableUntil = () => Number(option.strikePrice) - Number(option.premium);
+    const tillExpiry = usePrettyTimeTill(option.expiry, TimeGranularities.Minute);
 
     return (
         <Row className="justify-content-md-center">
@@ -165,8 +161,8 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                             <ToggleButton
                                                 type="radio"
                                                 name="optionType"
-                                                value="European"
-                                                checked={option.optionType === "European"}
+                                                value="european"
+                                                checked={option.optionType === "european"}
                                                 onChange={handleChange}
                                             >
                                                 {t("create:type-european")}
@@ -174,8 +170,8 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                             <ToggleButton
                                                 type="radio"
                                                 name="optionType"
-                                                value="American"
-                                                checked={option.optionType === "American"}
+                                                value="american"
+                                                checked={option.optionType === "american"}
                                                 onChange={handleChange}
                                             >
                                                 {t("create:type-american")}
@@ -194,6 +190,9 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         selected={new Date(option.expiry)}
                                         onChange={handleChangeDate}
                                     />
+                                    <Form.Text>
+                                        {t("common:time-until", { time: tillExpiry })}
+                                    </Form.Text>
                                 </Col>
                                 <Col>
                                     {
@@ -201,7 +200,11 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         // react-i18next 11.8.0, giving a fully type-safe
                                         // translation function
                                     }
-                                    <Form.Control readOnly plaintext value={t("noon-time")} />
+                                    <Form.Control
+                                        readOnly
+                                        plaintext
+                                        value={t("common:noon-time")}
+                                    />
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row}>
@@ -236,23 +239,26 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             </Form.Group>
                             <Form.Group as={Row}>
                                 <Col xs={3}>
-                                    <Form.Label>{t("create:validity")}</Form.Label>
+                                    <Form.Label>{t("validity")}</Form.Label>
                                 </Col>
                                 <Col>
                                     <Form.Control
                                         as="select"
                                         name="validityWindow"
-                                        value={option.validityWindow}
+                                        value={option.offerExpiry}
                                         onChange={handleChange}
                                     >
                                         {VALIDITY_OPTIONS.hours.map((count) => (
-                                            <option value={hoursToMs(count)} key={`${count}h`}>
-                                                {t("create:validity-hours", { count })}
+                                            <option
+                                                value={NOW + hoursToMs(count)}
+                                                key={`${count}h`}
+                                            >
+                                                {t("validity-hours", { count })}
                                             </option>
                                         ))}
                                         {VALIDITY_OPTIONS.days.map((count) => (
-                                            <option value={daysToMs(count)} key={`${count}d`}>
-                                                {t("create:validity-days", { count })}
+                                            <option value={NOW + daysToMs(count)} key={`${count}d`}>
+                                                {t("validity-days", { count })}
                                             </option>
                                         ))}
                                     </Form.Control>
@@ -261,14 +267,14 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             <hr />
                             <Form.Group as={Row}>
                                 <Col xs={3} className="align-self-center">
-                                    <Form.Label>{t("create:profitable-until")}</Form.Label>
+                                    <Form.Label>{t("profitable-until")}</Form.Label>
                                 </Col>
                                 <Col>
                                     <Form.Control
                                         plaintext
                                         readOnly
-                                        value={t("create:profitable-cutoff", {
-                                            cutoff: profitableUntil(),
+                                        value={t("common:exchange-rate", {
+                                            amount: profitableUntil(),
                                             underlying: option.underlying,
                                             collateral: option.collateral,
                                         })}
@@ -291,4 +297,4 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
     );
 };
 
-export default withTranslation(["common", "create"])(Create);
+export default withTranslation(["create", "common"])(Create);
