@@ -102,10 +102,12 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         name="size"
                                         readOnly
                                         plaintext
-                                        value={t("size", {
-                                            amount: state.size,
-                                            underlying: t(state.underlying),
-                                        })}
+                                        value={
+                                            t("size", {
+                                                amount: state.size,
+                                                underlying: t(state.underlying),
+                                            }) as string
+                                        }
                                     />
                                 </Col>
                             </Form.Group>
@@ -119,10 +121,12 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         name="strikePrice"
                                         readOnly
                                         plaintext
-                                        value={t("strike", {
-                                            amount: state.strikePrice,
-                                            collateral: t(state.collateral),
-                                        })}
+                                        value={
+                                            t("strike", {
+                                                amount: state.strikePrice,
+                                                collateral: t(state.collateral),
+                                            }) as string
+                                        }
                                     />
                                 </Col>
                             </Form.Group>
@@ -137,7 +141,7 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                             name="type"
                                             readOnly
                                             plaintext
-                                            value={t(`create:type-${state.optionType}`)}
+                                            value={t(`create:type-${state.optionType}`) as string}
                                         />
                                     </Col>
                                 </Form.Group>
@@ -169,10 +173,12 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                         name="premium"
                                         readOnly
                                         plaintext
-                                        value={t("premium", {
-                                            amount: state.premium,
-                                            collateral: t(state.collateral),
-                                        })}
+                                        value={
+                                            t("premium", {
+                                                amount: state.premium,
+                                                collateral: t(state.collateral),
+                                            }) as string
+                                        }
                                     />
                                 </Col>
                             </Form.Group>
@@ -188,10 +194,12 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                                 name="sellerBTCAddress"
                                                 readOnly
                                                 plaintext
-                                                value={t("currency-n-address", {
-                                                    currency: t(state.underlying),
-                                                    address: state.sellerBTCAddress,
-                                                })}
+                                                value={
+                                                    t("currency-n-address", {
+                                                        currency: t(state.underlying),
+                                                        address: state.sellerBTCAddress,
+                                                    }) as string
+                                                }
                                             />
                                         </Col>
                                     </Row>
@@ -202,10 +210,12 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                                 name="sellerColAddress"
                                                 readOnly
                                                 plaintext
-                                                value={t("currency-n-address", {
-                                                    currency: t(state.collateral),
-                                                    address: state.sellerColAddress,
-                                                })}
+                                                value={
+                                                    t("currency-n-address", {
+                                                        currency: t(state.collateral),
+                                                        address: state.sellerColAddress,
+                                                    }) as string
+                                                }
                                             />
                                         </Col>
                                     </Row>

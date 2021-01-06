@@ -16,11 +16,16 @@ type PositionRowProps = {
 function PositionRow(props: PositionRowProps): ReactElement {
     const { position } = props;
     const { option } = position;
+    const counterparty = position.written
+        ? position.buyerColAddress === "0x" + "0".repeat(40)
+            ? "Not yet executed"
+            : position.buyerColAddress
+        : option.sellerColAddress;
     return (
         <tr key={props.key}>
             <td>{position.written ? "Sell" : "Buy"}</td>
-            <td>{position.written ? position.buyerColAddress : option.sellerColAddress}</td>
-            <td>{option.strikePrice.toLocaleString()}</td>
+            <td>{counterparty}</td>
+            <td>{option.strikePrice.toLocaleString() + " " + option.collateral}</td>
             <td>{option.size}</td>
             <td>Performance placeholder</td>
             <td>{new Date(option.expiry).toLocaleDateString()}</td>

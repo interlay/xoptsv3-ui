@@ -1,5 +1,4 @@
 import { Optional } from "../src/lib/types";
-import { MockXOpts } from "./mock";
 import { ethers, Signer } from "ethers";
 import { DefaultXOpts, XOpts } from "./xopts";
 import { getAddresses } from "./addresses";
@@ -9,7 +8,7 @@ export async function createXOpts(
     signer: Optional<Signer> = null
 ): Promise<XOpts> {
     if (!provider) {
-        return new MockXOpts();
+        throw new Error("No provider for XOpts!");
     }
     const network = await provider.getNetwork();
     const addresses = getAddresses(network);
