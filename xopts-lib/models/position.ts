@@ -7,17 +7,13 @@ export interface Position {
     option: Option;
 
     /**
-     * Account owning the position
+     * Whether it's a sold (written) or bought (executed) option
      */
-    account: string;
+    written: boolean;
 
     /**
-     * The total amount written for this position in terms of underlying asset
+     * Buyer of the option (if the option is sell-type, and has been bought
      */
-    writtenAmount: number;
 
-    /**
-     * The total amount bought for this position in terms of underlying asset
-     */
-    boughtAmount: number;
+    buyerColAddress: string;
 }

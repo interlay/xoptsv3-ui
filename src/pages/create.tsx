@@ -13,16 +13,15 @@ import {
 import { AppState, FormControlElement, SubmitStates } from "../lib/types";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { createDefault } from "../../xopts-lib/models/option";
-import { daysToMs, encodeOptionData, getOptionLink, hoursToMs } from "../common/utils";
+import { daysToMs, getOptionLink, hoursToMs } from "../common/utils";
 import ConnectButton from "../components/connect-button/connect-button";
 import CreateOptionBtn from "../components/create-option-btn/create-option-btn";
 import { withTranslation } from "../common/i18n";
 
 import { TimeGranularities, usePrettyTimeTill } from "../lib/hooks/use-time-till";
 import SpotPrice from "../components/spot-price/spot-price";
-import { storeOption } from "../lib/actions";
 import { useXOpts } from "../lib/hooks/use-xopts";
 
 const VALIDITY_OPTIONS = {
@@ -35,7 +34,6 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
 
     const isConnected = useSelector((state: AppState) => state.user.isConnected);
 
-    const dispatch = useDispatch();
     const defaultOption = createDefault({
         offerExpiry: NOW + hoursToMs(VALIDITY_OPTIONS.hours[0]),
     });
@@ -69,10 +67,15 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
 
         if (xopts) {
             console.log(option);
-            const optionId = await xopts.saveOption(option);
-            setSerialisedOpt(optionId);
-            console.log(serialisedOpt);
-            setSubmitState(SubmitStates.Success);
+            try {
+                const optionId = await xopts.saveOption(option);
+                setSerialisedOpt(optionId);
+                console.log(serialisedOpt);
+                setSubmitState(SubmitStates.Success);
+            } catch (e) {
+                setSubmitState(SubmitStates.Failure);
+                throw e;
+            }
         } else {
             console.error("xopts not available");
             setSubmitState(SubmitStates.Failure);
