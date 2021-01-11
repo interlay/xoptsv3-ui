@@ -1,5 +1,5 @@
 import { TFunction } from "next-i18next";
-import React, { FormEvent, ReactElement, useState } from "react";
+import React, { FormEvent, ReactElement, useMemo, useState } from "react";
 import {
     ButtonGroup,
     Card,
@@ -30,7 +30,7 @@ const VALIDITY_OPTIONS = {
 };
 
 const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
-    const NOW = Date.now(); //update on every re-render
+    const NOW = useMemo(() => Date.now(), []);
     const minDate = new Date(NOW).getUTCHours() > 12 ? NOW + 3600 * 12 * 1000 : NOW;
 
     const isConnected = useSelector((state: AppState) => state.user.isConnected);
