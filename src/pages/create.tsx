@@ -46,11 +46,15 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
 
     const xopts = useXOpts();
 
-    const handleChange = (e: React.ChangeEvent<FormControlElement>) =>
+    const handleChange = (e: React.ChangeEvent<FormControlElement>) => {
+        console.log(`Event: ${e.target.name}, value: ${e.target.value}`);
+        console.log(`State: ${option[e.target.name]}`);
+        console.log(option);
         setOption({
             ...option,
             [e.target.name]: e.target.value,
         });
+    };
 
     const handleChangeDate = (date: Date) => {
         date.setUTCHours(12);
@@ -185,7 +189,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                             <fieldset>
                                 <Form.Group as={Row}>
                                     <Col xs={3}>
-                                        <Form.Label>{t("create:callput")}</Form.Label>
+                                        <Form.Label>{t("create:put-call")}</Form.Label>
                                     </Col>
                                     <Col>
                                         <ButtonGroup toggle>
@@ -193,7 +197,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                                 type="radio"
                                                 name="put"
                                                 value={true}
-                                                checked={option.put}
+                                                checked={option.put === "true"}
                                                 onChange={handleChange}
                                             >
                                                 {t("common:put")}
@@ -202,7 +206,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                                 type="radio"
                                                 name="put"
                                                 value={false}
-                                                checked={!option.put}
+                                                checked={option.put === "false"}
                                                 onChange={handleChange}
                                             >
                                                 {t("common:call")}

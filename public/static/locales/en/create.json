@@ -6,6 +6,7 @@
     "type": "Type",
     "type-american": "American",
     "type-european": "European",
+    "put-call": "Put or call",
     "expiry": "Expiry",
     "premium": "Premium",
     "btc-address": "BTC Address",

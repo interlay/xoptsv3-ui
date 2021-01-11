@@ -130,22 +130,38 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     />
                                 </Col>
                             </Form.Group>
-                            <fieldset>
-                                <Form.Group as={Row}>
-                                    <Col xs={3}>
-                                        <Form.Label>{t("create:type")}</Form.Label>
-                                    </Col>
-                                    <Col>
-                                        <Form.Control
-                                            type="text"
-                                            name="type"
-                                            readOnly
-                                            plaintext
-                                            value={t(`create:type-${state.optionType}`) as string}
-                                        />
-                                    </Col>
-                                </Form.Group>
-                            </fieldset>
+                            <Form.Group as={Row}>
+                                <Col xs={3}>
+                                    <Form.Label>{t("create:type")}</Form.Label>
+                                </Col>
+                                <Col>
+                                    <Form.Control
+                                        type="text"
+                                        name="type"
+                                        readOnly
+                                        plaintext
+                                        value={t(`create:type-${state.optionType}`) as string}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Col xs={3}>
+                                    <Form.Label>{t("create:put-call")}</Form.Label>
+                                </Col>
+                                <Col>
+                                    <Form.Control
+                                        type="text"
+                                        name="put"
+                                        readOnly
+                                        plaintext
+                                        value={
+                                            state.put
+                                                ? t("common:put")
+                                                : (t("common:call") as string)
+                                        }
+                                    />
+                                </Col>
+                            </Form.Group>
                             <Form.Group as={Row}>
                                 <Col xs={3}>
                                     <Form.Label>{t("create:expiry")}</Form.Label>
