@@ -7,6 +7,7 @@ export type Option = {
     strikePrice: string;
     collateral: string;
     optionType: OptionType;
+    put: boolean;
     expiry: number;
     premium: string;
     sellerBTCAddress: string;
@@ -25,7 +26,8 @@ export function createDefault(overrides: PartialOption = {}): Option {
             underlying: "BTC",
             strikePrice: "",
             collateral: "USDT",
-            optionType: "american",
+            optionType: "european",
+            put: true,
             expiry: Date.now(),
             premium: "",
             sellerBTCAddress: "",

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Col, Form, InputGroup } from "react-bootstrap";
 import { SubmitStates } from "../../lib/types";
 import { withTranslation } from "../../common/i18n";
-import CopyButton from "./copy-button";
+import CopyButton from "../copy-button/copy-button";
 import { WithTranslation } from "next-i18next";
 
 type CreateOptionProps = {

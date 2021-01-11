@@ -27,6 +27,7 @@ type ContractOption = {
     collateral: string;
     expiry: BigNumber;
     european: boolean;
+    put: boolean;
     premium: BigNumber;
     recipientWhitelist: string[];
     underlying: string;
@@ -50,6 +51,7 @@ function contractOptToLibOpt(opt: ContractOption, addresses: Addresses): Option 
         strikePrice: (opt.strikePrice.toNumber() / decimals[collateral]).toString(),
         collateral: collateral,
         optionType: opt.european ? "european" : "american",
+        put: opt.put,
         expiry: opt.expiry.toNumber(),
         premium: (opt.premium.toNumber() / decimals[collateral]).toString(),
         sellerBTCAddress: opt.sellerBTCAddress,
@@ -130,6 +132,7 @@ export class DefaultXOpts implements XOpts {
             expiry: option.expiry,
             underlying: utils.formatBytes32String(option.underlying),
             european: option.optionType === "european",
+            put: option.put,
             strikePrice: strike,
             offerExpiry: option.offerExpiry,
             size: size,

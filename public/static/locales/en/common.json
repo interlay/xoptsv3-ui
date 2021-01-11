@@ -7,6 +7,8 @@
     "BTC": "BTC",
     "USDT": "USDT",
     "DAI": "DAI",
+    "put": "Put",
+    "call": "Call",
     "connect-wallet": "Connect wallet",
     "copy": "Copy",
     "copy-success": "Copied!",

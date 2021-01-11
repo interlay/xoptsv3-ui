@@ -212,7 +212,7 @@ const Claim = ({ t }: { readonly t: TFunction }): ReactElement => {
                                                 plaintext
                                                 value={
                                                     t("currency-n-address", {
-                                                        currency: t(state.collateral),
+                                                        currency: "ETH",
                                                         address: state.sellerColAddress,
                                                     }) as string
                                                 }

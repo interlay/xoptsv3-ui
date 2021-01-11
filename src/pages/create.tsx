@@ -182,6 +182,35 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     </Col>
                                 </Form.Group>
                             </fieldset>
+                            <fieldset>
+                                <Form.Group as={Row}>
+                                    <Col xs={3}>
+                                        <Form.Label>{t("create:callput")}</Form.Label>
+                                    </Col>
+                                    <Col>
+                                        <ButtonGroup toggle>
+                                            <ToggleButton
+                                                type="radio"
+                                                name="put"
+                                                value={true}
+                                                checked={option.put}
+                                                onChange={handleChange}
+                                            >
+                                                {t("common:put")}
+                                            </ToggleButton>
+                                            <ToggleButton
+                                                type="radio"
+                                                name="put"
+                                                value={false}
+                                                checked={!option.put}
+                                                onChange={handleChange}
+                                            >
+                                                {t("common:call")}
+                                            </ToggleButton>
+                                        </ButtonGroup>
+                                    </Col>
+                                </Form.Group>
+                            </fieldset>
                             <Form.Group as={Row}>
                                 <Col xs={3}>
                                     <Form.Label>{t("create:expiry")}</Form.Label>
@@ -206,6 +235,7 @@ const Create = ({ t }: { readonly t: TFunction }): ReactElement => {
                                     <Form.Control
                                         readOnly
                                         plaintext
+                                        disabled
                                         value={t("common:noon-time") as string}
                                     />
                                 </Col>

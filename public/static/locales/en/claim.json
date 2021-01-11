@@ -4,7 +4,7 @@
     "size": "{{amount}} {{underlying}}",
     "strike": "{{amount}} {{collateral}}",
     "premium": "{{amount}} {{collateral}}",
-    "seller-address": "Seller's address:",
+    "seller-address": "Seller accounts:",
     "currency-n-address": "{{currency}}: {{address}}",
     "validity": "Offer valid until: ",
     "break-even": "Break-even:",
