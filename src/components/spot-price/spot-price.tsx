@@ -17,8 +17,11 @@ const SpotPrice = ({ t, collateral, underlying }: SpotPriceProps) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        updateBTCSpotPrice(dispatch);
-        const interval = setInterval(() => updateBTCSpotPrice(dispatch), 10000);
+        updateBTCSpotPrice(dispatch, underlying, collateral);
+        const interval = setInterval(
+            () => updateBTCSpotPrice(dispatch, underlying, collateral),
+            10000
+        );
         return () => clearInterval(interval);
     }, [collateral, underlying]);
 
