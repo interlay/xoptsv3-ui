@@ -8,9 +8,9 @@ import { appWithTranslation } from "../common/i18n";
 import "../stylesheets/app.scss";
 import { useXOpts } from "../lib/hooks/use-xopts";
 
-function App({ Component, pageProps }: AppProps): ReactElement {
-    const store = configureStore();
+const store = configureStore();
 
+function App({ Component, pageProps }: AppProps): ReactElement {
     // NOTE: pre-load even if not used in navigated page
     useXOpts();
 
